@@ -1,12 +1,18 @@
 import express  from "express";
-import { eq } from 'drizzle-orm';
-import { index } from './db';
-import { demoUsers } from './schema';
+import subjectsRouter from "./routes/subjects";
+import cors from "cors";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
+
+app.use("/api/v1/subjects", subjectsRouter);
 
 app.get("/", (
     req, res
