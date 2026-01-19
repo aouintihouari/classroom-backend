@@ -5,6 +5,8 @@ import cors from "cors";
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+if (!process.env.FRONTEND_URL) throw new Error("FRONTEND_URL is not set in .env file");
+
 app.use(express.json());
 app.use(cors({
     origin: process.env.FRONTEND_URL,
@@ -20,4 +22,4 @@ app.get("/", (
     res.send("Hello, welcome to the Classroom API!")}
 )
 
-app.listen(8000, () => {console.log(`Server is running on port ${PORT}`)});
+app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)});
