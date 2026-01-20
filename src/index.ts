@@ -14,6 +14,8 @@ app.use(cors({
     credentials: true
 }));
 
+console.log(process.env.FRONTEND_URL);
+
 app.use("/api/v1/subjects", subjectsRouter);
 
 app.get("/", (
