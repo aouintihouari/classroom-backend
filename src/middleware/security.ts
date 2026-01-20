@@ -1,9 +1,10 @@
 import type {Request, Response, NextFunction} from "express";
 import aj from "../config/arcjet";
-import {ArcjetNodeRequest, ArcjetRequest, slidingWindow} from "@arcjet/node";
+import {ArcjetNodeRequest, slidingWindow} from "@arcjet/node";
 
 const securityMiddleware = async(req: Request, res: Response, next: NextFunction) => {
-    if(process.env.NODE_ENV !== "test") return next();
+    if(process.env.NODE_ENV === "test") return next();
+
     try {
         const role: RateLimitRole = req.user?.role ?? "guest";
         let limit: number;
@@ -51,12 +52,15 @@ const securityMiddleware = async(req: Request, res: Response, next: NextFunction
             });
 
         if(decision.isDenied() && decision.reason.isRateLimit())
-            return res.status(403).json({ error: "Too many requests.", message });
+            return res.status(429).json({ error: "Too many requests.", message });
 
         next();
     } catch(e) {
         console.error(e);
-        res.status(500).json({error: "Internal error", message: "Something went wrong with security middleware"})
+        return res.status(500).json({
+            error: "Internal error",
+            message: "Something went wrong with security middleware"
+        });
     }
 };
 

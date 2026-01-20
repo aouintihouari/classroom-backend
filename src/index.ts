@@ -20,7 +20,7 @@ app.use(securityMiddleware);
 app.use("/api/v1/subjects", subjectsRouter);
 
 app.get("/", (
-    req, res
+    _, res
     ) => {
     res.send("Hello, welcome to the Classroom API!")}
 )

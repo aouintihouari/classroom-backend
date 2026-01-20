@@ -23,7 +23,7 @@ export const subjects =
     {
          id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
          departmentId: integer("department_id").notNull()
-         .references(() => departments.id,
+            .references(() => departments.id,
          { onDelete: "restrict" }),
         name: varchar("name", { length: 255 }).notNull(),
         code: varchar("code",  { length: 50 }).notNull().unique(),
@@ -37,7 +37,7 @@ export const departmentRelations = relations(departments,
     ({ subjects: many(subjects) }))
 
 export const subjectsRelation = relations(subjects,
-    ({ one, many}) =>
+    ({ one }) =>
     ({
     department: one(departments, {
       fields: [subjects.departmentId],
