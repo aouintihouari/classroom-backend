@@ -1,25 +1,26 @@
 import express  from "express";
-import subjectsRouter from "./routes/subjects";
 import cors from "cors";
+
+import subjectsRouter from "./routes/subjects";
+import securityMiddleware from "./middleware/security";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 if (!process.env.FRONTEND_URL) throw new Error("FRONTEND_URL is not set in .env file");
 
-app.use(express.json());
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
-
-console.log(process.env.FRONTEND_URL);
+app.use(express.json());
+app.use(securityMiddleware);
 
 app.use("/api/v1/subjects", subjectsRouter);
 
 app.get("/", (
-    req, res
+    _, res
     ) => {
     res.send("Hello, welcome to the Classroom API!")}
 )

@@ -1,13 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-    boolean,
-    index,
-    pgEnum,
-    pgTable,
-    text,
-    timestamp,
-    uniqueIndex,
-} from "drizzle-orm/pg-core";
+import {boolean, index, pgEnum, pgTable, text, timestamp, uniqueIndex} from "drizzle-orm/pg-core";
 
 const timestamps = {
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -18,8 +10,10 @@ const timestamps = {
 };
 
 export const roleEnum = pgEnum("role", ["student", "teacher", "admin"]);
+export type UserRoles = (typeof roleEnum.enumValues)[number];
 
-export const user = pgTable("user", {
+export const user = pgTable("user",
+{
     id: text("id").primaryKey(),
     name: text("name").notNull(),
     email: text("email").notNull(),
@@ -27,9 +21,10 @@ export const user = pgTable("user", {
     image: text("image"),
     role: roleEnum("role").notNull().default("student"),
     imageCldPubId: text("image_cld_pub_id"),
-
     ...timestamps,
-});
+},(table) => ({
+        emailUnique: uniqueIndex("user_email_unique").on(table.email)}
+));
 
 export const session = pgTable(
     "session",
